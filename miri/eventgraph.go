@@ -10,6 +10,10 @@ import (
 	"strconv"
 )
 
+var (
+	c chan bool = make(chan bool)
+)
+
 //差の絶対値
 func abs(x int) int {
 	if x < 0 {
@@ -87,6 +91,9 @@ func write(filename, eventname, rank string, r, g, b byte) {
 
 	//ボーダーのファイルを開く
 	file, err := os.Open(filename)
+
+	//終わったら閉じる
+	defer file.Close()
 
 	//エラー
 	if err != nil {
@@ -178,11 +185,11 @@ func write(filename, eventname, rank string, r, g, b byte) {
 	}
 
 	//画像ファイル作成
-	pic1, err := os.Create("C:\\Users\\ryogen\\Desktop\\ミリグラ\\グラフ\\" + rank + eventname + "_bor.png")
+	pic1, err := os.Create("C:\\Users\\ryogen\\Desktop\\ミリグラ\\0登録済み\\" + rank + eventname + "_bor.png")
 	if err != nil {
 		fmt.Println(err)
 	}
-	pic2, err := os.Create("C:\\Users\\ryogen\\Desktop\\ミリグラ\\グラフ\\" + rank + eventname + "_dif.png")
+	pic2, err := os.Create("C:\\Users\\ryogen\\Desktop\\ミリグラ\\0登録済み\\" + rank + eventname + "_dif.png")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -191,8 +198,13 @@ func write(filename, eventname, rank string, r, g, b byte) {
 	png.Encode(pic1, border)
 	png.Encode(pic2, dif)
 
+	//閉じる
+	pic1.Close()
+	pic2.Close()
+
 	//終了のお知らせ
 	fmt.Println("complete!")
+	c <- false
 }
 
 func main() {
@@ -211,6 +223,13 @@ func main() {
 	fmt.Scan(&b)
 
 	filename := "C:\\Users\\ryogen\\Desktop\\ミリグラ\\" + eventname
-	write(filename+"\\100.txt", eventname, "100\\", r, g, b)
-	write(filename+"\\2500.txt", eventname, "2500\\", r, g, b)
+	go write(filename+"\\100.txt", eventname, "100\\", r, g, b)
+	go write(filename+"\\2500.txt", eventname, "2500\\", r, g, b)
+	<-c
+	<-c
+
+	//ディレクトリを隅に移動させる
+	if err := os.Rename(filename, "C:\\Users\\ryogen\\Desktop\\ミリグラ\\0登録済み\\"+eventname); err != nil {
+		fmt.Println(err)
+	}
 }
