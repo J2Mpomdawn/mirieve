@@ -157,24 +157,28 @@ func check() {
 					s = "//1日目の15時"
 					misses = append(misses, miss{-1, s})
 
+					//jがlen-1より小さいとき
+				} else if j < len(v)-1 {
+
 					//一個だけで、その次でカバーされてなかったら
-				} else if w == 1 && v[j+1] != 3 {
+					if w == 1 && v[j+1] != 3 {
 
-					//すでに追加されてて、最後に追加した.nと同じなら
-					if len(misses) > 0 && int(d-1) == misses[len(misses)-1].n {
-						misses[len(misses)-1].t += fmt.Sprintf("//%d日目の%d時－1個", i+1, j)
+						//すでに追加されてて、最後に追加した.nと同じなら
+						if len(misses) > 0 && int(d-1) == misses[len(misses)-1].n {
+							misses[len(misses)-1].t += fmt.Sprintf("//%d日目の%d時－1個", i+1, j)
 
-						//そうじゃなかったら普通に追加
-					} else {
-						misses = append(misses, miss{int(d - 1), fmt.Sprintf("//%d日目の%d時－1個", i+1, j)})
-					}
+							//そうじゃなかったら普通に追加
+						} else {
+							misses = append(misses, miss{int(d - 1), fmt.Sprintf("//%d日目の%d時－1個", i+1, j)})
+						}
 
-					//ゼロ個やったら
-				} else if w == 0 {
-					if len(misses) > 0 && int(d-1) == misses[len(misses)-1].n {
-						misses[len(misses)-1].t += fmt.Sprintf("//%d日目の%d時－2個", i+1, j)
-					} else {
-						misses = append(misses, miss{int(d - 1), fmt.Sprintf("//%d日目の%d時－2個", i+1, j)})
+						//ゼロ個やったら
+					} else if w == 0 {
+						if len(misses) > 0 && int(d-1) == misses[len(misses)-1].n {
+							misses[len(misses)-1].t += fmt.Sprintf("//%d日目の%d時－2個", i+1, j)
+						} else {
+							misses = append(misses, miss{int(d - 1), fmt.Sprintf("//%d日目の%d時－2個", i+1, j)})
+						}
 					}
 				}
 			}
@@ -184,17 +188,19 @@ func check() {
 			d = day
 			for j, w := range v {
 				d += w
-				if w == 1 && v[j+1] != 3 {
-					if len(misses) > 0 && int(d-1) == misses[len(misses)-1].n {
-						misses[len(misses)-1].t += fmt.Sprintf("//%d日目の%d時－1個", i+1, j)
-					} else {
-						misses = append(misses, miss{int(d - 1), fmt.Sprintf("//%d日目の%d時－1個", i+1, j)})
-					}
-				} else if w == 0 {
-					if len(misses) > 0 && int(d-1) == misses[len(misses)-1].n {
-						misses[len(misses)-1].t += fmt.Sprintf("//%d日目の%d時－2個", i+1, j)
-					} else {
-						misses = append(misses, miss{int(d - 1), fmt.Sprintf("//%d日目の%d時－2個", i+1, j)})
+				if j < len(v)-1 {
+					if w == 1 && v[j+1] != 3 {
+						if len(misses) > 0 && int(d-1) == misses[len(misses)-1].n {
+							misses[len(misses)-1].t += fmt.Sprintf("//%d日目の%d時－1個", i+1, j)
+						} else {
+							misses = append(misses, miss{int(d - 1), fmt.Sprintf("//%d日目の%d時－1個", i+1, j)})
+						}
+					} else if w == 0 {
+						if len(misses) > 0 && int(d-1) == misses[len(misses)-1].n {
+							misses[len(misses)-1].t += fmt.Sprintf("//%d日目の%d時－2個", i+1, j)
+						} else {
+							misses = append(misses, miss{int(d - 1), fmt.Sprintf("//%d日目の%d時－2個", i+1, j)})
+						}
 					}
 				}
 			}
@@ -207,17 +213,19 @@ func check() {
 					break
 				}
 				d += w
-				if w == 1 && v[j+1] != 3 {
-					if len(misses) > 0 && int(d-1) == misses[len(misses)-1].n {
-						misses[len(misses)-1].t += fmt.Sprintf("//%d日目の%d時－1個", i+1, j)
-					} else {
-						misses = append(misses, miss{int(d - 1), fmt.Sprintf("//%d日目の%d時－1個", i+1, j)})
-					}
-				} else if w == 0 {
-					if len(misses) > 0 && int(d-1) == misses[len(misses)-1].n {
-						misses[len(misses)-1].t += fmt.Sprintf("//%d日目の%d時－2個", i+1, j)
-					} else {
-						misses = append(misses, miss{int(d - 1), fmt.Sprintf("//%d日目の%d時－2個", i+1, j)})
+				if j < len(v)-1 {
+					if w == 1 && v[j+1] != 3 {
+						if len(misses) > 0 && int(d-1) == misses[len(misses)-1].n {
+							misses[len(misses)-1].t += fmt.Sprintf("//%d日目の%d時－1個", i+1, j)
+						} else {
+							misses = append(misses, miss{int(d - 1), fmt.Sprintf("//%d日目の%d時－1個", i+1, j)})
+						}
+					} else if w == 0 {
+						if len(misses) > 0 && int(d-1) == misses[len(misses)-1].n {
+							misses[len(misses)-1].t += fmt.Sprintf("//%d日目の%d時－2個", i+1, j)
+						} else {
+							misses = append(misses, miss{int(d - 1), fmt.Sprintf("//%d日目の%d時－2個", i+1, j)})
+						}
 					}
 				}
 			}
