@@ -203,7 +203,9 @@ func write(filename, eventname, rank string, r, g, b byte) {
 	pic2.Close()
 
 	//終了のお知らせ
-	fmt.Println("complete!")
+	if err == nil {
+		fmt.Println("complete!")
+	}
 	c <- false
 }
 
@@ -214,17 +216,42 @@ func main() {
 	fmt.Scan(&eventname)
 
 	//色は指定してもらう
-	var r, g, b byte
-	fmt.Print("線の色入力\nR, G, Bで指定して\nR → ")
+	var r, g byte
+	b := 0
+	fmt.Print("線の色入力\nR, G, Bで指定して\nBを666にすると16進トリプレットの指定に切り替わる\nR → ")
 	fmt.Scan(&r)
 	fmt.Print("G → ")
 	fmt.Scan(&g)
 	fmt.Print("B → ")
 	fmt.Scan(&b)
 
+	//bをbyteに変換
+	bi := byte(b)
+
+	//bが666やったらカラーコードで指定
+	if b == 666 {
+		fmt.Print("16進トリプレット(例:#0369cf)で指定 → ")
+		hex := ""
+		fmt.Scan(&hex)
+		hb := []byte(hex)
+		for i, v := range hb {
+			if v > 96 {
+				hb[i] = v - 87
+			} else {
+				hb[i] = v - 48
+			}
+			if i%2 != 0 {
+				hb[i] *= 15
+			}
+		}
+		r = hb[1] + hb[2]
+		g = hb[3] + hb[4]
+		bi = hb[5] + hb[6]
+	}
+
 	filename := "C:\\Users\\ryogen\\Desktop\\ミリグラ\\" + eventname
-	go write(filename+"\\100.txt", eventname, "100\\", r, g, b)
-	go write(filename+"\\2500.txt", eventname, "2500\\", r, g, b)
+	go write(filename+"\\100.txt", eventname, "100\\", r, g, bi)
+	go write(filename+"\\2500.txt", eventname, "2500\\", r, g, bi)
 	<-c
 	<-c
 
